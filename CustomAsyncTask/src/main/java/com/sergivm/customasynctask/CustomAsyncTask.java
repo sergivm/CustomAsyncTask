@@ -50,4 +50,18 @@ public abstract class CustomAsyncTask {
     public abstract void onPostExecute();
     public abstract void onFailed(Exception exception);
 
+    public void execute() {
+        startBackground();
+        if (!isShutdown())
+            shutdown();
+    }
+
+    private void shutdown() {
+        executorService.shutdown();
+    }
+
+    private boolean isShutdown() {
+        return executorService.isShutdown();
+    }
+
 }
