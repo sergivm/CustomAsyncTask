@@ -1,10 +1,7 @@
 package com.sergivm.customasynctask;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +15,10 @@ import com.sergivm.customasynctask.databinding.FragmentSecondBinding;
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
-    private Context mContext;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
-        mContext = getActivity().getApplicationContext();
         return binding.getRoot();
     }
 
@@ -33,7 +28,7 @@ public class SecondFragment extends Fragment {
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomAsyncTask customAsyncTask = new CustomAsyncTask() {
+                BasicAsyncTask basicAsyncTask = new BasicAsyncTask() {
                     private ProgressDialog progressDialog;
 
                     @Override
@@ -48,8 +43,6 @@ public class SecondFragment extends Fragment {
                     public void doInBackground() {
                         try {
                             Thread.sleep(2000);
-                            NavHostFragment.findNavController(SecondFragment.this)
-                                    .navigate(R.id.action_SecondFragment_to_FirstFragment);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -59,14 +52,12 @@ public class SecondFragment extends Fragment {
                     public void onPostExecute() {
                         if (progressDialog.isShowing())
                             progressDialog.dismiss();
-                    }
 
-                    @Override
-                    public void onFailed(Exception exception) {
-
+                        NavHostFragment.findNavController(SecondFragment.this)
+                                .navigate(R.id.action_SecondFragment_to_FirstFragment);
                     }
                 };
-                customAsyncTask.execute();
+                basicAsyncTask.execute();
             }
         });
     }

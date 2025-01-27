@@ -3,15 +3,13 @@ package com.sergivm.customasynctask;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * @author Sergi Villa <svm7979@gmail.com> Copyright 2025
  */
-public abstract class CustomAsyncTask {
+public abstract class CustomAsyncTask extends BasicAsyncTask {
 
-    private final ExecutorService executorService;
     private Exception exception;
 
     public CustomAsyncTask() {
@@ -19,7 +17,17 @@ public abstract class CustomAsyncTask {
         this.exception = null;
     }
 
-    private void startBackground() {
+
+    // <editor-fold default-state="collapsed" desc="ABSTRACT METHODS">
+
+    public abstract void onFailed(Exception exception);
+
+    // </editor-fold>
+
+    // <editor-fold default-state="collapsed" desc="PUBLIC METHODS">
+
+    @Override
+    protected void startBackground() {
         onPreExecute();
         executorService.execute(new Runnable() {
             @Override
@@ -45,23 +53,6 @@ public abstract class CustomAsyncTask {
         });
     }
 
-    public abstract void onPreExecute();
-    public abstract void doInBackground();
-    public abstract void onPostExecute();
-    public abstract void onFailed(Exception exception);
-
-    public void execute() {
-        startBackground();
-        if (!isShutdown())
-            shutdown();
-    }
-
-    private void shutdown() {
-        executorService.shutdown();
-    }
-
-    private boolean isShutdown() {
-        return executorService.isShutdown();
-    }
+    // </editor-fold>
 
 }
