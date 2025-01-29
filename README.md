@@ -1,1 +1,1 @@
-[![](https://jitpack.io/v/sergivm/sergivm79.svg)](https://jitpack.io/#sergivm/sergivm79)
+[![](https://jitpack.io/v/sergivm/CustomAsyncTask.svg)](https://jitpack.io/#sergivm/CustomAsyncTask)
