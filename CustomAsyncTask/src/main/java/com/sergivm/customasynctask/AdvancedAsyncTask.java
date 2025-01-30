@@ -8,19 +8,25 @@ import java.util.concurrent.Executors;
 /**
  * @author Sergi Villa <svm7979@gmail.com> Copyright 2025
  */
-public abstract class CustomAsyncTask extends BasicAsyncTask {
+public abstract class AdvancedAsyncTask extends BasicAsyncTask {
 
     private Exception exception;
+    private AsyncTaskStatus status;
 
-    public CustomAsyncTask() {
+    public AdvancedAsyncTask() {
         this.executorService = Executors.newSingleThreadExecutor();
         this.exception = null;
+        this.status = AsyncTaskStatus.PENDING;
     }
 
 
     // <editor-fold default-state="collapsed" desc="ABSTRACT METHODS">
 
     public abstract void onFailed(Exception exception);
+
+    public AsyncTaskStatus getStatus() {
+        return this.status;
+    }
 
     // </editor-fold>
 
@@ -33,9 +39,11 @@ public abstract class CustomAsyncTask extends BasicAsyncTask {
             @Override
             public void run() {
                 try {
+                    status = AsyncTaskStatus.RUNNING;
                     doInBackground();
                 } catch (Exception e) {
                     exception = e;
+                    status = AsyncTaskStatus.FAILED;
                 }
 
                 if (exception == null) {
@@ -43,6 +51,7 @@ public abstract class CustomAsyncTask extends BasicAsyncTask {
                         @Override
                         public void run() {
                             onPostExecute();
+                            status = AsyncTaskStatus.FINISHED;
                         }
                     });
                 }
