@@ -41,7 +41,7 @@ afterEvaluate {
                 from components.findByName('release')
                 groupId = 'com.github.sergivm'
                 artifactId = 'custom-async-task'
-                version = '1.0.0'
+                version = '1.0.1'
             }
         }
     }

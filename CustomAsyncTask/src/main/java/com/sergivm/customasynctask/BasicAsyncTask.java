@@ -54,6 +54,10 @@ public abstract class BasicAsyncTask {
         });
     }
 
+    protected void cancel() {
+        executorService.shutdownNow();
+    }
+
     // </editor-fold>
 
     // <editor-fold default-state="collapsed" desc="PRIVATE METHODS">

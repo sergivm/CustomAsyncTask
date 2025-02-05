@@ -8,12 +8,12 @@ import java.util.concurrent.Executors;
 /**
  * @author Sergi Villa <svm7979@gmail.com> Copyright 2025
  */
-public abstract class AdvancedAsyncTask extends BasicAsyncTask {
+public abstract class CustomAsyncTask extends BasicAsyncTask {
 
     private Exception exception;
     private AsyncTaskStatus status;
 
-    public AdvancedAsyncTask() {
+    public CustomAsyncTask() {
         this.executorService = Executors.newSingleThreadExecutor();
         this.exception = null;
         this.status = AsyncTaskStatus.PENDING;
@@ -24,13 +24,31 @@ public abstract class AdvancedAsyncTask extends BasicAsyncTask {
 
     public abstract void onFailed(Exception exception);
 
-    public AsyncTaskStatus getStatus() {
-        return this.status;
-    }
+    public abstract void onCancelled();
 
     // </editor-fold>
 
     // <editor-fold default-state="collapsed" desc="PUBLIC METHODS">
+
+    public boolean isRunning() {
+        return this.status == AsyncTaskStatus.RUNNING;
+    }
+
+    public boolean isFinished() {
+        return this.status == AsyncTaskStatus.FINISHED;
+    }
+
+    public boolean isCancelled() {
+        return this.status == AsyncTaskStatus.CANCELLED;
+    }
+
+    public boolean isFailed() {
+        return this.status == AsyncTaskStatus.FAILED;
+    }
+
+    // </editor-fold>
+
+    // <editor-fold default-state="collapsed" desc="PROTECTED METHODS">
 
     @Override
     protected void startBackground() {
@@ -60,6 +78,12 @@ public abstract class AdvancedAsyncTask extends BasicAsyncTask {
                 }
             }
         });
+    }
+
+    @Override
+    protected void cancel() {
+        super.cancel();
+        onCancelled();
     }
 
     // </editor-fold>
